@@ -6,193 +6,332 @@
     <title>Zetech University - Digital School eLearning Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #0a2b3e 0%, #1a4a6f 100%); }
+        .course-card:hover { transform: translateY(-5px); transition: all 0.3s ease; }
+        .loading { display: none; }
+        .toast { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+    </style>
 </head>
 <body class="bg-gray-50">
-    <div id="loginPage" class="min-h-screen bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center p-4">
+    <div id="toastContainer" class="toast"></div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="min-h-screen gradient-bg flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
             <div class="text-center mb-8">
-                <div class="w-24 h-24 mx-auto bg-blue-600 rounded-full flex items-center justify-center">
-                    <i class="fas fa-graduation-cap text-white text-4xl"></i>
-                </div>
-                <h1 class="text-2xl font-bold mt-4">Zetech Digital School</h1>
+                <img src="https://placehold.co/120x120/0a2b3e/white?text=Zetech" alt="Zetech Logo" class="mx-auto rounded-full">
+                <h1 class="text-2xl font-bold mt-4 text-gray-800">Zetech Digital School</h1>
                 <p class="text-gray-500">eLearning Portal Login</p>
             </div>
             <form id="loginForm">
-                <input type="text" id="loginRegNumber" placeholder="Registration Number (e.g., STU001)" class="w-full mb-3 px-4 py-3 border rounded-lg" required>
-                <input type="password" id="loginPassword" placeholder="Password" class="w-full mb-4 px-4 py-3 border rounded-lg" required>
-                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold">Login</button>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Registration Number / Email</label>
+                    <input type="text" id="loginRegNumber" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., STU001 or email" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Password</label>
+                    <input type="password" id="loginPassword" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold">Login</button>
             </form>
-            <p class="text-center text-gray-500 mt-4 text-sm">Demo: STU001 / password123</p>
-            <button onclick="showRegister()" class="w-full mt-3 border border-blue-600 text-blue-600 py-3 rounded-lg">Create Account</button>
+            <p class="text-center text-gray-500 mt-4 text-sm">
+                Demo Credentials: STU001 / password123
+            </p>
+            <hr class="my-6">
+            <button onclick="showRegister()" class="w-full border border-blue-600 text-blue-600 py-3 rounded-lg hover:bg-blue-50 transition font-semibold">Create Account</button>
         </div>
     </div>
 
-    <div id="registerPage" class="min-h-screen bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center p-4 hidden">
+    <!-- Register Page -->
+    <div id="registerPage" class="min-h-screen gradient-bg flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
             <h2 class="text-2xl font-bold text-center mb-6">Student Registration</h2>
             <form id="registerForm">
                 <input type="text" id="regFullName" placeholder="Full Name" class="w-full mb-3 px-4 py-3 border rounded-lg" required>
                 <input type="text" id="regNumber" placeholder="Registration Number" class="w-full mb-3 px-4 py-3 border rounded-lg" required>
-                <input type="email" id="regEmail" placeholder="Email" class="w-full mb-3 px-4 py-3 border rounded-lg" required>
-                <input type="password" id="regPassword" placeholder="Password" class="w-full mb-4 px-4 py-3 border rounded-lg" required>
-                <select id="regProgram" class="w-full mb-4 px-4 py-3 border rounded-lg">
+                <input type="email" id="regEmail" placeholder="Email Address" class="w-full mb-3 px-4 py-3 border rounded-lg" required>
+                <input type="password" id="regPassword" placeholder="Password" class="w-full mb-3 px-4 py-3 border rounded-lg" required>
+                <select id="regProgram" class="w-full mb-4 px-4 py-3 border rounded-lg" required>
+                    <option value="">Select Program</option>
                     <option>Computer Science</option>
-                    <option>Business Administration</option>
                     <option>Information Technology</option>
+                    <option>Software Engineering</option>
+                    <option>Business Administration</option>
+                    <option>Hospitality Management</option>
                 </select>
-                <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg">Register</button>
+                <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition">Register</button>
             </form>
-            <button onclick="showLogin()" class="w-full mt-3 text-blue-600 py-2">Back to Login</button>
+            <button onclick="showLogin()" class="w-full mt-4 text-blue-600 py-2">Back to Login</button>
         </div>
     </div>
 
+    <!-- Dashboard -->
     <div id="dashboardPage" class="hidden">
-        <nav class="bg-gradient-to-br from-blue-900 to-blue-700 text-white p-4 sticky top-0">
+        <nav class="gradient-bg text-white p-4 sticky top-0 z-50">
             <div class="container mx-auto flex justify-between items-center">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center space-x-3">
                     <i class="fas fa-graduation-cap text-2xl"></i>
-                    <span class="font-bold">Zetech Digital School</span>
+                    <span class="font-bold text-xl">Zetech Digital School</span>
                 </div>
-                <button onclick="logout()" class="bg-red-500 px-4 py-2 rounded-lg">Logout</button>
+                <div class="flex items-center space-x-4">
+                    <span id="userNameDisplay" class="hidden md:inline"></span>
+                    <button onclick="logout()" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600 transition">Logout</button>
+                </div>
             </div>
         </nav>
+
         <div class="container mx-auto p-4 max-w-6xl">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div class="bg-white rounded-xl p-6 shadow">
-                    <i class="fas fa-book-open text-blue-500 text-3xl"></i>
-                    <p class="text-gray-500 mt-2">Courses</p>
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-blue-500">
+                    <i class="fas fa-book-open text-blue-500 text-3xl mb-2"></i>
+                    <h3 class="text-gray-500">Enrolled Courses</h3>
                     <p id="statCourses" class="text-3xl font-bold">0</p>
                 </div>
-                <div class="bg-white rounded-xl p-6 shadow">
-                    <i class="fas fa-tasks text-orange-500 text-3xl"></i>
-                    <p class="text-gray-500 mt-2">Assignments</p>
+                <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-orange-500">
+                    <i class="fas fa-tasks text-orange-500 text-3xl mb-2"></i>
+                    <h3 class="text-gray-500">Pending Assignments</h3>
                     <p id="statAssignments" class="text-3xl font-bold">0</p>
                 </div>
-                <div class="bg-white rounded-xl p-6 shadow">
-                    <i class="fas fa-chart-line text-green-500 text-3xl"></i>
-                    <p class="text-gray-500 mt-2">GPA</p>
+                <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-green-500">
+                    <i class="fas fa-chart-line text-green-500 text-3xl mb-2"></i>
+                    <h3 class="text-gray-500">Current GPA</h3>
                     <p id="statGPA" class="text-3xl font-bold">0.00</p>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow mb-6">
-                <div class="flex border-b overflow-x-auto">
-                    <button onclick="showTab('courses')" id="tabCoursesBtn" class="px-4 py-3 font-semibold text-blue-600 border-b-2 border-blue-600">My Courses</button>
-                    <button onclick="showTab('allCourses')" id="tabAllCoursesBtn" class="px-4 py-3 font-semibold text-gray-600">All Courses</button>
-                    <button onclick="showTab('grades')" id="tabGradesBtn" class="px-4 py-3 font-semibold text-gray-600">Grades</button>
+            <!-- Tabs -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+                <div class="flex border-b">
+                    <button onclick="showTab('courses')" id="tabCoursesBtn" class="px-6 py-3 font-semibold text-blue-600 border-b-2 border-blue-600">My Courses</button>
+                    <button onclick="showTab('assignments')" id="tabAssignmentsBtn" class="px-6 py-3 font-semibold text-gray-600 hover:text-blue-600">Assignments</button>
+                    <button onclick="showTab('grades')" id="tabGradesBtn" class="px-6 py-3 font-semibold text-gray-600 hover:text-blue-600">Grades</button>
+                    <button onclick="showTab('allCourses')" id="tabAllCoursesBtn" class="px-6 py-3 font-semibold text-gray-600 hover:text-blue-600">All Courses</button>
                 </div>
-                <div id="coursesTab" class="p-4"><div id="myCoursesList"></div></div>
-                <div id="allCoursesTab" class="p-4 hidden"><div id="allCoursesList" class="grid grid-cols-1 gap-3"></div></div>
-                <div id="gradesTab" class="p-4 hidden"><div id="gradesList"></div></div>
+
+                <!-- My Courses Tab -->
+                <div id="coursesTab" class="p-6">
+                    <div id="myCoursesList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+
+                <!-- Assignments Tab -->
+                <div id="assignmentsTab" class="p-6 hidden">
+                    <div id="assignmentsList"></div>
+                </div>
+
+                <!-- Grades Tab -->
+                <div id="gradesTab" class="p-6 hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-100">
+                                <tr><th class="p-3 text-left">Course Code</th><th class="p-3 text-left">Course Name</th><th class="p-3 text-left">Score</th><th class="p-3 text-left">Grade</th></tr>
+                            </thead>
+                            <tbody id="gradesTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- All Courses Tab -->
+                <div id="allCoursesTab" class="p-6 hidden">
+                    <div class="mb-4 flex gap-2 overflow-x-auto">
+                        <button onclick="filterCoursesBySchool('all')" class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm">All Schools</button>
+                        <button onclick="filterCoursesBySchool(1)" class="px-4 py-2 bg-gray-200 rounded-full text-sm">Business</button>
+                        <button onclick="filterCoursesBySchool(2)" class="px-4 py-2 bg-gray-200 rounded-full text-sm">ICT & Engineering</button>
+                        <button onclick="filterCoursesBySchool(3)" class="px-4 py-2 bg-gray-200 rounded-full text-sm">Hospitality</button>
+                        <button onclick="filterCoursesBySchool(4)" class="px-4 py-2 bg-gray-200 rounded-full text-sm">Education</button>
+                    </div>
+                    <div id="allCoursesList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow p-4">
-                <h3 class="font-bold text-lg mb-2"><i class="fas fa-bullhorn text-blue-500"></i> Announcements</h3>
+            <!-- Announcements -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="font-bold text-lg mb-4"><i class="fas fa-bullhorn text-blue-500"></i> Latest Announcements</h3>
                 <div id="announcementsList"></div>
             </div>
         </div>
     </div>
 
     <script>
-        const API_URL = '/.netlify/functions/api';
-        
-        function showToast(msg) {
-            alert(msg); // Simple alert for mobile
+        const API_URL = 'api.php';
+        let currentUser = null;
+        let authToken = null;
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toastContainer');
+            toast.innerHTML = `<div class="bg-${type === 'success' ? 'green' : 'red'}-500 text-white px-6 py-3 rounded-lg shadow-lg">${message}</div>`;
+            setTimeout(() => toast.innerHTML = '', 3000);
         }
 
         async function apiCall(endpoint, method = 'GET', data = null) {
             const options = { method, headers: { 'Content-Type': 'application/json' } };
             if (data) options.body = JSON.stringify(data);
+            
             const response = await fetch(`${API_URL}?route=${endpoint}`, options);
             return await response.json();
         }
 
-        document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const result = await apiCall('login', 'POST', {
-                reg_number: document.getElementById('loginRegNumber').value,
-                password: document.getElementById('loginPassword').value
-            });
+        async function login(event) {
+            event.preventDefault();
+            const reg_number = document.getElementById('loginRegNumber').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const result = await apiCall('login', 'POST', { reg_number, password });
+            
             if (result.success) {
-                localStorage.setItem('user', JSON.stringify(result.user));
-                location.reload();
-            } else alert(result.error);
-        });
+                currentUser = result.user;
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                showToast('Login successful!');
+                loadDashboard();
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('dashboardPage').classList.remove('hidden');
+                document.getElementById('userNameDisplay').innerHTML = `<i class="fas fa-user-circle"></i> ${currentUser.full_name}`;
+            } else {
+                showToast(result.error, 'error');
+            }
+        }
 
-        document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const result = await apiCall('register', 'POST', {
+        async function register(event) {
+            event.preventDefault();
+            const userData = {
                 reg_number: document.getElementById('regNumber').value,
                 full_name: document.getElementById('regFullName').value,
                 email: document.getElementById('regEmail').value,
                 password: document.getElementById('regPassword').value,
                 program: document.getElementById('regProgram').value
-            });
-            if (result.success) { alert('Registered! Please login'); showLogin(); }
-            else alert(result.error);
-        });
+            };
+            
+            const result = await apiCall('register', 'POST', userData);
+            
+            if (result.success) {
+                showToast('Registration successful! Please login.');
+                showLogin();
+            } else {
+                showToast(result.error, 'error');
+            }
+        }
 
         async function loadDashboard() {
-            const data = await apiCall('dashboard');
-            if (data.courses) {
-                document.getElementById('statCourses').innerText = data.courses;
-                document.getElementById('statAssignments').innerText = data.pending_assignments;
-                document.getElementById('statGPA').innerText = data.gpa;
+            const dashboard = await apiCall('dashboard');
+            if (dashboard.courses) {
+                document.getElementById('statCourses').textContent = dashboard.courses;
+                document.getElementById('statAssignments').textContent = dashboard.pending_assignments;
+                document.getElementById('statGPA').textContent = dashboard.gpa;
             }
-            await loadMyCourses();
-            await loadAllCourses();
-            await loadGrades();
-            await loadAnnouncements();
+            loadMyCourses();
+            loadAssignments();
+            loadGrades();
+            loadAllCourses();
+            loadAnnouncements();
         }
 
         async function loadMyCourses() {
             const courses = await apiCall('my-courses');
-            document.getElementById('myCoursesList').innerHTML = courses.map(c => `
-                <div class="bg-gray-50 rounded-lg p-3 mb-2 border">
-                    <b>${c.course_code}</b> - ${c.course_name}<br>
-                    <small class="text-gray-600">${c.school_name || ''} | Credits: ${c.credits}</small>
-                    ${c.grade ? `<br><span class="text-green-600">Grade: ${c.grade}%</span>` : ''}
+            const container = document.getElementById('myCoursesList');
+            if (courses.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">No courses enrolled yet.</p>';
+                return;
+            }
+            container.innerHTML = courses.map(c => `
+                <div class="course-card bg-gray-50 rounded-lg p-4 border hover:shadow-lg transition">
+                    <h4 class="font-bold text-blue-600">${c.course_code}</h4>
+                    <p class="font-semibold">${c.course_name}</p>
+                    <p class="text-sm text-gray-600">${c.school_name}</p>
+                    <p class="text-sm">Lecturer: ${c.lecturer_name || 'TBA'}</p>
+                    ${c.grade ? `<p class="text-sm font-bold text-green-600 mt-2">Grade: ${c.grade}%</p>` : ''}
                 </div>
             `).join('');
         }
 
-        async function loadAllCourses() {
-            const courses = await apiCall('courses');
-            document.getElementById('allCoursesList').innerHTML = courses.map(c => `
-                <div class="bg-gray-50 rounded-lg p-3 border">
-                    <b>${c.course_code}</b> - ${c.course_name}<br>
-                    <small>${c.school_name} | ${c.credits} credits</small>
-                    <p class="text-sm text-gray-600 mt-1">${c.description || ''}</p>
+        async function loadAssignments() {
+            const assignments = await apiCall('assignments');
+            const container = document.getElementById('assignmentsList');
+            if (assignments.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">No pending assignments.</p>';
+                return;
+            }
+            container.innerHTML = assignments.map(a => `
+                <div class="border-b py-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold">${a.title}</h4>
+                            <p class="text-sm text-gray-600">${a.course_code}: ${a.course_name}</p>
+                            <p class="text-sm">Due: ${new Date(a.due_date).toLocaleDateString()}</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-sm ${a.submitted ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}">
+                            ${a.submitted ? 'Submitted' : 'Pending'}
+                        </span>
+                    </div>
                 </div>
             `).join('');
         }
 
         async function loadGrades() {
             const grades = await apiCall('grades');
-            document.getElementById('gradesList').innerHTML = grades.map(g => `
-                <div class="flex justify-between border-b py-2">
-                    <span><b>${g.course_code}</b> ${g.course_name}</span>
-                    <span class="font-bold">${g.grade}% (${g.letter_grade})</span>
+            const tbody = document.getElementById('gradesTableBody');
+            tbody.innerHTML = grades.map(g => `
+                <tr class="border-b">
+                    <td class="p-3">${g.course_code}</td>
+                    <td class="p-3">${g.course_name}</td>
+                    <td class="p-3 font-semibold">${g.grade}%</td>
+                    <td class="p-3"><span class="px-2 py-1 rounded ${g.letter_grade === 'A' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}">${g.letter_grade}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadAllCourses(schoolId = null) {
+            let url = 'courses';
+            if (schoolId && schoolId !== 'all') url += `&school=${schoolId}`;
+            const courses = await apiCall(url);
+            const container = document.getElementById('allCoursesList');
+            container.innerHTML = courses.map(c => `
+                <div class="course-card bg-white rounded-lg p-4 border shadow-sm hover:shadow-md transition">
+                    <h4 class="font-bold text-blue-600">${c.course_code}</h4>
+                    <p class="font-semibold">${c.course_name}</p>
+                    <p class="text-sm text-gray-600">${c.school_name}</p>
+                    <p class="text-sm">Credits: ${c.credits} | Semester: ${c.semester}</p>
+                    <p class="text-sm text-gray-500 mt-2">${c.description || 'Course description available in syllabus.'}</p>
                 </div>
             `).join('');
         }
 
         async function loadAnnouncements() {
             const announcements = await apiCall('announcements');
-            document.getElementById('announcementsList').innerHTML = announcements.map(a => `
-                <div class="border-b py-2">
-                    <b>${a.title}</b>
-                    <p class="text-sm">${a.content}</p>
-                    <small class="text-gray-500">${a.created_at}</small>
+            const container = document.getElementById('announcementsList');
+            container.innerHTML = announcements.map(a => `
+                <div class="border-b py-3">
+                    <h4 class="font-semibold">${a.title}</h4>
+                    <p class="text-sm text-gray-600">${a.content}</p>
+                    <p class="text-xs text-gray-400 mt-1">Posted by ${a.author_name} on ${a.formatted_date}</p>
                 </div>
             `).join('');
         }
 
+        function filterCoursesBySchool(schoolId) {
+            loadAllCourses(schoolId);
+        }
+
         function showTab(tab) {
             document.getElementById('coursesTab').classList.add('hidden');
-            document.getElementById('allCoursesTab').classList.add('hidden');
+            document.getElementById('assignmentsTab').classList.add('hidden');
             document.getElementById('gradesTab').classList.add('hidden');
+            document.getElementById('allCoursesTab').classList.add('hidden');
             document.getElementById(`${tab}Tab`).classList.remove('hidden');
+            
+            const btns = ['courses', 'assignments', 'grades', 'allCourses'];
+            btns.forEach(b => {
+                const btn = document.getElementById(`tab${b.charAt(0).toUpperCase() + b.slice(1)}Btn`);
+                if (btn) {
+                    btn.classList.remove('text-blue-600', 'border-blue-600');
+                    btn.classList.add('text-gray-600');
+                }
+            });
+            const activeBtn = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}Btn`);
+            if (activeBtn) {
+                activeBtn.classList.add('text-blue-600', 'border-blue-600');
+                activeBtn.classList.remove('text-gray-600');
+            }
         }
 
         function showRegister() {
@@ -207,15 +346,25 @@
 
         function logout() {
             localStorage.removeItem('user');
-            location.reload();
+            currentUser = null;
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
+            showToast('Logged out successfully');
         }
 
+        document.getElementById('loginForm').addEventListener('submit', login);
+        document.getElementById('registerForm').addEventListener('submit', register);
+
+        // Check for saved session
         const savedUser = localStorage.getItem('user');
-        if (savedUser && document.getElementById('dashboardPage')) {
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('dashboardPage').classList.remove('hidden');
+            document.getElementById('userNameDisplay').innerHTML = `<i class="fas fa-user-circle"></i> ${currentUser.full_name}`;
             loadDashboard();
         }
     </script>
 </body>
-  </html>
+            </html>
